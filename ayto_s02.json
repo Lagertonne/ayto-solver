@@ -1,0 +1,47 @@
+{
+	"men": [
+		"aaron",
+		"dario",
+		"dominik",
+		"germain",
+		"marc",
+		"marcel",
+		"marko",
+		"marvin",
+		"maximilian",
+		"sascha"
+	],
+	"women": [
+		"christin",
+		"jill",
+		"kathleen",
+		"laura",
+		"leonie",
+		"melissa",
+		"mirjam",
+		"sabrina",
+		"vanessa",
+		"victoria"
+	],
+	"matching_nights": [
+		{
+			"id": 0,
+			"matches": 2,
+			"pairs": {
+				"sabrina": "marko",
+				"jill": "marvin",
+				"victoria": "dario",
+				"christin": "maximilian",
+				"leonie": "germain",
+				"vanessa": "sascha",
+				"melissa": "dominik",
+				"kathleen": "aaron",
+				"mirjam": "marc",
+				"laura": "marcel"
+			}
+		}
+	],
+	"truth_booth": {
+		"leonie": "marcel"
+	}
+}
