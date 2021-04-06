@@ -21,7 +21,8 @@
 		"mirjam",
 		"sabrina",
 		"vanessa",
-		"victoria"
+		"victoria",
+		"vanessa_m"
 	],
 	"matching_nights": [
 		{
@@ -100,7 +101,8 @@
 				"melissa": "marc",
 				"kathleen": "marvin",
 				"mirjam": "aaron",
-				"laura": "maximilian"
+				"laura": "maximilian",
+				"vanessa_m": "marko"
 			}
 		},
 		{
@@ -115,7 +117,8 @@
 				"vanessa": "dominik",
 				"melissa": "aaron",
 				"mirjam": "marc",
-				"laura": "marvin"
+				"laura": "marvin",
+				"vanessa_m": "dario"
 			}
 		},
 		{
@@ -130,7 +133,8 @@
 				"kathleen": "marvin",
 				"melissa": "aaron",
 				"mirjam": "marc",
-				"laura": "dominik"
+				"laura": "dominik",
+				"vanessa_m": "germain"
 			}
 		},
 		{
@@ -145,7 +149,8 @@
 				"melissa": "dominik",
 				"mirjam": "maximilian",
 				"laura": "marko",
-				"kathleen": "marvin"
+				"kathleen": "marvin",
+				"vanessa_m": "marc"
 			}
 		},
 		{
