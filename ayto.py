@@ -11,7 +11,6 @@ parser.add_argument("file", help="The file where the relevant data stored")
 
 args = parser.parse_args()
 
-pairs = {}
 
 # Order alphabetically blabla
 def sanitize_data(data):
@@ -27,33 +26,38 @@ def sanitize_data(data):
     return data
 
 # Writes the matches known from the truth booths
-def parse_truth_booths(data):
-    for woman,man in data["truth_booth"]["true"].items():
-        set_pair_true(data, woman, man)
+def parse_truth_booths(data, pairs):
+    for known_pair in data["truth_booth"]:
+        if known_pair["match"] is True:
+            set_pair_true(data, pairs, known_pair["woman"], known_pair["man"])
+        else:
+            set_pair_false(data, pairs, known_pair["woman"], known_pair["man"])
     
-    for woman,man in data["truth_booth"]["false"].items():
-        set_pair_false(data, woman, man)
+    return pairs
 
-def set_pair_true(data, woman, man):
+def set_pair_true(data, pairs, woman, man):
     pairs[woman][man] = True
     
     # Set all that are no-match to False
     for man_2 in data["men"]:
         if man_2 != man:
-            set_pair_false(data, woman, man_2)
+            set_pair_false(data, pairs, woman, man_2)
     
     # Set the man for all womans to false
     for woman_2 in data["women"]:
         if woman_2 != woman:
-            set_pair_false(data, woman_2, man)
+            set_pair_false(data, pairs, woman_2, man)
+    
+    return pairs
 
-def set_pair_false(data, woman, man):
+def set_pair_false(data, pairs, woman, man):
     pairs[woman][man] = False
+    return pairs
 
 
 # Remove the already known matches from every matching night.
 # Returns a new data-object
-def remove_already_known_from_mn(data):
+def remove_already_known_from_mn(data, pairs):
     for matching_night in data["matching_nights"]:
         mn_id = matching_night["id"]
         # Python cannot delete from dict while iterating over it, so we need to split this up
@@ -75,21 +79,23 @@ def remove_already_known_from_mn(data):
     return data
 
 # Parse Matching-Nights for blackouts or "constructed" blackouts
-def get_relevant_from_mn(data):
+def get_relevant_from_mn(data, pairs):
     for matching_night in data["matching_nights"]:
         mn_id = matching_night["id"]
         if matching_night["matches"] == 0:
             #print(str(mn_id) + " is a blackout. Writing information to pairs...")
             for woman,man in matching_night["pairs"].items():
-                set_pair_false(data, woman, man)
+                set_pair_false(data, pairs, woman, man)
 
         if matching_night["matches"] == len(matching_night["pairs"]):
             #print(str(mn_id) + " has only matches remaining...")
             for woman,man in matching_night["pairs"].items():
                 #print("Setting " + woman + " + " + man + " to true")
-                set_pair_true(data, woman, man)
+                set_pair_true(data, pairs, woman, man)
+    return pairs
 
-def get_relevant_from_pairs(data):
+# Look in pairs for womans that only have one "Undefined" left
+def get_relevant_from_pairs(data, pairs):
     for woman in pairs:
         none_counter = 0
         none_man = None
@@ -103,8 +109,9 @@ def get_relevant_from_pairs(data):
         if none_counter == 1:
             print("Found " + woman + " and " + none_man)
             set_pair_true(data, woman, none_man)
+    return pairs
 
-def print_pairs():
+def print_pairs(pairs):
     for woman in pairs:
         print(woman + ": ")
         for man in pairs[woman]:
@@ -115,7 +122,7 @@ def print_pairs():
             #if pairs[woman][man] is False:
             #    print(colored("  " + man, 'red'))
 
-def print_matching_night(data, mn_id):
+def print_matching_night(data, pairs, mn_id):
     matching_night = data["matching_nights"][mn_id]
     mn_id = matching_night["id"]
     print(colored("==== Matching Night " + str(mn_id) + " ====", 'green'))
@@ -129,7 +136,7 @@ def print_matching_night(data, mn_id):
     print("")
     print("")
 
-def print_matching_nights(data):
+def print_matching_nights(data, pairs):
     for matching_night in data["matching_nights"]:
         mn_id = matching_night["id"]
         print(colored("==== Matching Night " + str(mn_id) + " ====", 'green'))
@@ -149,20 +156,30 @@ with open(args.file) as json_file:
 
 data = sanitize_data(data)
 
+pairs = {}
+
 # Create a big 2d-matrix
 for woman in data["women"]:
     pairs[woman] = {}
     for man in data["men"]:
         pairs[woman][man] = None
 
-parse_truth_booths(data)
-for i in range(1,10):
-    print("Iteration: " + str(i))
-    data = remove_already_known_from_mn(data)
-    get_relevant_from_mn(data)
-    get_relevant_from_pairs(data)
-    print_matching_nights(data)
-    print_pairs()
+# Do these steps until nothing changes anymore, aka pairs stays the same
+# Also: Let's imitate a do-while-loop
+orig_pairs = pairs.copy()
+iteration = 0
+for i in range(1,100):
+    iteration = iteration + 1
+    pairs = parse_truth_booths(data, pairs)
+    data = remove_already_known_from_mn(data, pairs)
+    pairs = get_relevant_from_mn(data, pairs)
+    pairs = get_relevant_from_pairs(data, pairs)
+    if orig_pairs == pairs:
+        print("We did everything we could. Needed iterations: " + str(iteration))
+        #break
+
+print_matching_nights(data, pairs)
+print_pairs(pairs)
 
 
 # Steps to solve the riddle:

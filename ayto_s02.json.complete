@@ -170,18 +170,48 @@
 			}
 		}
 	],
-	"truth_booth": {
-		"true": {
-			"leonie": "marcel",
-			"melissa": "aaron",
-			"mirjam": "marc"
+	"truth_booth": [
+		{
+			"id": 0,
+			"woman": "sabrina",
+			"man": "maximilian",
+			"match": false
 		},
-		"false": {
-			"sabrina": "maximilian",
-			"kathleen": "aaron",
-			"laura": "marcel",
-			"laura": "dario",
-			"sabrina": "marko"
+		{
+			"id": 2,
+			"woman": "kathleen",
+			"man": "aaron",
+			"match": false
+		},
+		{
+			"id": 3,
+			"woman": "laura",
+			"man": "marcel",
+			"match": false
+		},
+		{
+			"id": 4,
+			"woman": "leonie",
+			"man": "marcel",
+			"match": true
+		},
+		{
+			"id": 6,
+			"woman": "laura",
+			"man": "dario",
+			"match": false
+		},
+		{
+			"id": 7,
+			"woman": "sabrina",
+			"man": "marko",
+			"match": false
+		},
+		{
+			"id": 8,
+			"woman": "melissa",
+			"man": "aaron",
+			"match": true
 		}
-	}
+	]
 }
